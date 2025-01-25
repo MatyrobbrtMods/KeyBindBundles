@@ -1,6 +1,7 @@
 {
   "required": true,
   "package": "com.matyrobbrt.keybindbundles.mixin",
+  "refmap": "keybindbundles.mixins.refmap.json",
   "mixins": [],
   "client": [
     "KeyEntryMixin",

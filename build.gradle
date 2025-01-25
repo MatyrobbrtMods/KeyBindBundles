@@ -1,7 +1,8 @@
 plugins {
+    id 'idea'
     id 'java-library'
     id 'maven-publish'
-    id 'net.neoforged.moddev' version '1.0.21'
+    id 'net.neoforged.moddev.legacyforge' version '2.0.76'
 }
 
 tasks.named('wrapper', Wrapper).configure {
@@ -27,11 +28,11 @@ base {
 }
 
 // Mojang ships Java 21 to end users starting in 1.20.5, so mods should target Java 21.
-java.toolchain.languageVersion = JavaLanguageVersion.of(21)
+java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
-neoForge {
+legacyForge {
     // Specify the version of NeoForge to use.
-    version = project.neo_version
+    version = project.minecraft_version + '-' + project.neo_version
 
     parchment {
         mappingsVersion = project.parchment_mappings_version
@@ -115,6 +116,17 @@ configurations {
     runtimeClasspath.extendsFrom localRuntime
 }
 
+repositories {
+    maven {
+        url 'https://cursemaven.com'
+    }
+}
+
+mixin {
+    add sourceSets.main, 'keybindbundles.mixins.refmap.json'
+    config 'keybindbundles.mixins.json'
+}
+
 dependencies {
     // Example optional mod dependency with JEI
     // The JEI API is declared for compile time use, while the full JEI artifact is used at runtime
@@ -138,7 +150,23 @@ dependencies {
     // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
     // http://www.gradle.org/docs/current/userguide/dependency_management.html
 
-    compileOnly "com.blamejared.controlling:Controlling-neoforge-1.21.1:19.0.3"
+    modCompileOnly "com.blamejared.controlling:Controlling-forge-1.20.1:12.0.2"
+    compileOnly 'org.jetbrains:annotations:26.0.2'
+
+    compileOnly(annotationProcessor("io.github.llamalad7:mixinextras-common:0.4.1"))
+    implementation(jarJar("io.github.llamalad7:mixinextras-forge:0.4.1"))
+
+    annotationProcessor("org.spongepowered:mixin:0.8.7:processor")
+
+    modRuntimeOnly("curse.maven:mekanism-268560:6018299")
+    modRuntimeOnly("curse.maven:controlling-250398:4646682")
+    modRuntimeOnly("curse.maven:searchables-858542:5284015")
+}
+
+jar {
+    manifest.attributes([
+            "MixinConfigs": 'keybindbundles.mixins.json'
+    ])
 }
 
 // This block of code expands all declared replace properties in the specified resource targets.
@@ -166,7 +194,7 @@ var generateModMetadata = tasks.register("generateModMetadata", ProcessResources
 // this works with both building through Gradle and the IDE.
 sourceSets.main.resources.srcDir generateModMetadata
 // To avoid having to run "generateModMetadata" manually, make it run on every project reload
-neoForge.ideSyncTask generateModMetadata
+legacyForge.ideSyncTask generateModMetadata
 
 // Example configuration to allow publishing using the maven-publish plugin
 publishing {

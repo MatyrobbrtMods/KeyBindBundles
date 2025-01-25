@@ -1,9 +1,9 @@
 package com.matyrobbrt.keybindbundles.compat;
 
 import net.minecraft.client.KeyMapping;
-import net.minecraft.client.gui.screens.options.controls.KeyBindsList;
+import net.minecraft.client.gui.screens.controls.KeyBindsList;
 import net.minecraft.network.chat.Component;
-import net.neoforged.fml.ModList;
+import net.minecraftforge.fml.ModList;
 
 import java.util.function.Predicate;
 

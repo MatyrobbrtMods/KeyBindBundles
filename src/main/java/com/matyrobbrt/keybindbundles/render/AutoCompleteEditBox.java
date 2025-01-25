@@ -137,11 +137,14 @@ public abstract class AutoCompleteEditBox<T> extends EditBox {
                 var element = spl.stream()
                         .filter(s -> s.startsWith("@"))
                         .findFirst()
-                        .orElseThrow();
-
-                spl.remove(element);
-                namespaceFilter = element.substring(1).toLowerCase(Locale.ROOT);
-                search = String.join(" ", spl);
+                        .orElse(null);
+                if (element == null) {
+                    namespaceFilter = "";
+                } else {
+                    spl.remove(element);
+                    namespaceFilter = element.substring(1).toLowerCase(Locale.ROOT);
+                    search = String.join(" ", spl);
+                }
             } else {
                 namespaceFilter = "";
             }
@@ -241,11 +244,11 @@ public abstract class AutoCompleteEditBox<T> extends EditBox {
         }
 
         @Override
-        public boolean mouseScrolled(double xpos, double ypos, double xDelta, double yDelta) {
+        public boolean mouseScrolled(double xpos, double ypos, double delta) {
             if (!this.isMouseOver(xpos, ypos)) {
                 return false;
             } else {
-                this.offset = (int) Mth.clamp((double)this.offset - yDelta, 0.0, Math.max(this.currentSuggestions.size() - maxSuggestions, 0));
+                this.offset = (int) Mth.clamp((double)this.offset - delta, 0.0, Math.max(this.currentSuggestions.size() - maxSuggestions, 0));
                 this.lastMousePosition.set(0.0);
                 return true;
             }

@@ -1,12 +1,12 @@
 package com.matyrobbrt.keybindbundles.mixin;
 
-import com.matyrobbrt.keybindbundles.ModKeyBindBundles;
+import com.matyrobbrt.keybindbundles.ModKeyBindBundlesClient;
 import com.matyrobbrt.keybindbundles.PriorityKeyMapping;
 import com.matyrobbrt.keybindbundles.ii.KeyMappingExtension;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.network.chat.Component;
-import net.neoforged.neoforge.client.settings.KeyMappingLookup;
+import net.minecraftforge.client.settings.KeyMappingLookup;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -48,7 +48,7 @@ public class KeyMappingMixin implements KeyMappingExtension {
     private void sakeCorrectKey(CallbackInfoReturnable<String> cir) {
         // This is to make sure that we don't save any key as being bound to the bundle trigger
         // if it happens to be saved while it's being held down and captured by us
-        if (key == ModKeyBindBundles.BUNDLE_TRIGGER_KEY && previousKey != null) {
+        if (key == ModKeyBindBundlesClient.BUNDLE_TRIGGER_KEY && previousKey != null) {
             cir.setReturnValue(previousKey.getName());
         }
     }
@@ -56,7 +56,7 @@ public class KeyMappingMixin implements KeyMappingExtension {
     @Override
     public void takeOverForBundle() {
         previousKey = key;
-        key = ModKeyBindBundles.BUNDLE_TRIGGER_KEY;
+        key = ModKeyBindBundlesClient.BUNDLE_TRIGGER_KEY;
     }
 
     @Override
@@ -80,9 +80,9 @@ public class KeyMappingMixin implements KeyMappingExtension {
 
     @Override
     public void kbb$unregister() {
-        key = InputConstants.UNKNOWN;
         var thiz = (KeyMapping)(Object)this;
         KeyMapping.ALL.remove(name);
         MAP.remove(thiz);
+        key = InputConstants.UNKNOWN;
     }
 }

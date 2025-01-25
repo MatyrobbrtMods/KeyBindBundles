@@ -1,5 +1,6 @@
 package com.matyrobbrt.keybindbundles.util;
 
+import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import org.jetbrains.annotations.NotNull;
 
@@ -21,7 +22,7 @@ public record RegistryBackedList<T>(Registry<T> registry, Class<T> type) impleme
 
     @Override
     public boolean contains(Object o) {
-        return type.isInstance(o) && registry.containsValue((T)o);
+        return type.isInstance(o) && registry.wrapAsHolder((T)o).kind() == Holder.Kind.REFERENCE;
     }
 
     @NotNull

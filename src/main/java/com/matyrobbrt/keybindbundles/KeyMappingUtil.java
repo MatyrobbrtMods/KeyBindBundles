@@ -4,14 +4,15 @@ import net.minecraft.client.KeyMapping;
 import net.minecraft.client.KeyboardHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.Screenshot;
-import net.neoforged.neoforge.client.ClientHooks;
-import net.neoforged.neoforge.client.event.InputEvent;
+import net.minecraftforge.client.ForgeHooksClient;
+import net.minecraftforge.client.event.InputEvent;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@SuppressWarnings("UnstableApiUsage")
 public class KeyMappingUtil {
     @Nullable
     public static KeyMapping getByName(String name) {
@@ -43,8 +44,8 @@ public class KeyMappingUtil {
         KEYS_TAKEN_OVER.add(mapping);
         mapping.setDown(true);
 
-        ClientHooks.onKeyInput(
-                ModKeyBindBundles.BUNDLE_TRIGGER_KEY.getValue(),
+        ForgeHooksClient.onKeyInput(
+                ModKeyBindBundlesClient.BUNDLE_TRIGGER_KEY.getValue(),
                 0, GLFW.GLFW_PRESS, 0
         );
     }
@@ -55,8 +56,8 @@ public class KeyMappingUtil {
 
     public static void release(KeyMapping map) {
         map.setDown(false);
-        ClientHooks.onKeyInput(
-                ModKeyBindBundles.BUNDLE_TRIGGER_KEY.getValue(),
+        ForgeHooksClient.onKeyInput(
+                ModKeyBindBundlesClient.BUNDLE_TRIGGER_KEY.getValue(),
                 0, GLFW.GLFW_RELEASE, 0
         );
 

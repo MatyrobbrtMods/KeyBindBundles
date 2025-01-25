@@ -12,10 +12,9 @@ import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.components.ImageButton;
 import net.minecraft.client.gui.components.Tooltip;
-import net.minecraft.client.gui.components.WidgetSprites;
 import net.minecraft.client.gui.screens.ConfirmScreen;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.gui.screens.options.controls.KeyBindsScreen;
+import net.minecraft.client.gui.screens.controls.KeyBindsScreen;
 import net.minecraft.client.searchtree.SearchTree;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.CommonComponents;
@@ -40,9 +39,7 @@ public class KeyBundleModificationScreen extends Screen {
             Component.translatable("tooltip.keybindbundles.bundle.move_clockwise"),
             Component.translatable("tooltip.keybindbundles.bundle.move_counterclockwise")
     );
-    private static final WidgetSprites CROSS_BUTTON_SPRITES = new WidgetSprites(
-            ResourceLocation.withDefaultNamespace("widget/cross_button"), ResourceLocation.withDefaultNamespace("widget/cross_button_highlighted")
-    );
+    private static final ResourceLocation CROSS_ICON_LOCATION = new ResourceLocation("realms", "textures/gui/realms/cross_player_icon.png");
 
     private final RadialMenuRenderer<KeyBindBundle.KeyEntry> renderer = new RadialMenuRenderer<>() {
         @Override
@@ -86,12 +83,12 @@ public class KeyBundleModificationScreen extends Screen {
         entries.add(ADD_ENTRY);
 
         var deleteButton = this.addRenderableWidget(
-                new ImageButton(width - 18, height - 18, 14, 14, CROSS_BUTTON_SPRITES, but -> {
+                new ImageButton(width - 18, height - 18, 8, 7, 0, 0, 7, CROSS_ICON_LOCATION, 8, 14, but -> {
                     Minecraft.getInstance().setScreen(new ConfirmScreen(click -> {
                         if (click) {
                             currentlySelecting = null;
-                            Minecraft.getInstance().setScreen(null);
                             KeyBindBundleManager.delete(bundle);
+                            Minecraft.getInstance().setScreen(null);
                         } else {
                             Minecraft.getInstance().setScreen(this);
                         }
@@ -110,6 +107,7 @@ public class KeyBundleModificationScreen extends Screen {
 
     @Override
     public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        renderBackground(guiGraphics);
         super.render(guiGraphics, mouseX, mouseY, partialTick);
 
         guiGraphics.drawString(font, getTitle(), width / 2 - font.width(getTitle()) / 2, 10, 0xffffffff);
@@ -193,7 +191,7 @@ public class KeyBundleModificationScreen extends Screen {
             title.setValue(getEntry().title());
 
             SearchTree<ItemStack> tree = SearchTreeManager.getSearchTree();
-            icon = new AutoCompleteEditBox<>(font, width / 2 - 120, middlePos + 2 + 9 + 2, 240, 20, 16, 18, 5, Component.translatable("box.keybindbundles.key_icon_id"), tree, i -> i.getItemHolder().getKey().location()) {
+            icon = new AutoCompleteEditBox<>(font, width / 2 - 120, middlePos + 2 + 9 + 2, 240, 20, 16, 18, 5, Component.translatable("box.keybindbundles.key_icon_id"), tree, i -> i.getItemHolder().unwrapKey().get().location()) {
                 @Override
                 public void renderItem(GuiGraphics graphics, int x, int y, ItemStack item) {
                     graphics.renderItem(item, x, y);
@@ -201,7 +199,7 @@ public class KeyBundleModificationScreen extends Screen {
             };
             icon.setMaxLength(512);
             if (!getEntry().icon().isEmpty()) {
-                icon.setValue(getEntry().icon().getItemHolder().getRegisteredName());
+                icon.setValue(getEntry().icon().getItemHolder().unwrapKey().get().location().toString());
             }
 
             addRenderableWidget(title);
@@ -217,6 +215,7 @@ public class KeyBundleModificationScreen extends Screen {
 
         @Override
         public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+            renderBackground(guiGraphics);
             super.render(guiGraphics, mouseX, mouseY, partialTick);
             var font = Minecraft.getInstance().font;
 

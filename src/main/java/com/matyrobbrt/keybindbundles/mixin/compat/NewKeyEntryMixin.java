@@ -22,7 +22,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.List;
 
 @Pseudo
-@Mixin(NewKeyBindsList.KeyEntry.class)
+@Mixin(value = NewKeyBindsList.KeyEntry.class)
 public class NewKeyEntryMixin extends BaseKeyEntryMixin implements OverrideListenersEntry {
     @Shadow
     @Final
@@ -63,12 +63,11 @@ public class NewKeyEntryMixin extends BaseKeyEntryMixin implements OverrideListe
     ) {
         if (selectButton != null) {
             guiGraphics.drawString(Minecraft.getInstance().font, keyDesc, left, top + height / 2 - 9 / 2, -1);
-            selectButton.setPosition(((AbstractSelectionListAccess) this$0).kbb$getScrollbarPosition() - selectButton.getWidth() - 10, top - 2);
+            selectButton.setPosition(left + width - 5 - selectButton.getWidth(), top - 2);
             selectButton.render(guiGraphics, mouseX, mouseY, partialTick);
             ci.cancel();
         } else if (editButton != null) {
-            int x = ((AbstractSelectionListAccess) this$0).kbb$getScrollbarPosition() - 50 - 10 - 5 - 75 - 5 - editButton.getWidth();
-            editButton.setPosition(x, top - 2);
+            editButton.setPosition(left + 105 - 5 - editButton.getWidth(), top);
             editButton.render(guiGraphics, mouseX, mouseY, partialTick);
         }
     }

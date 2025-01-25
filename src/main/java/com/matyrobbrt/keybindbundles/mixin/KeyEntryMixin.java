@@ -6,7 +6,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.events.GuiEventListener;
-import net.minecraft.client.gui.screens.options.controls.KeyBindsList;
+import net.minecraft.client.gui.screens.controls.KeyBindsList;
 import net.minecraft.network.chat.Component;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -65,8 +65,7 @@ public class KeyEntryMixin extends BaseKeyEntryMixin {
             selectButton.render(guiGraphics, mouseX, mouseY, partialTick);
             ci.cancel();
         } else if (editButton != null) {
-            int x = ((AbstractSelectionListAccess) this$0).kbb$getScrollbarPosition() - 50 - 10 - 5 - 75 - 5 - editButton.getWidth();
-            editButton.setPosition(x, top - 2);
+            editButton.setPosition(left + 105 - 5 - editButton.getWidth(), top - 2);
             editButton.render(guiGraphics, mouseX, mouseY, partialTick);
         }
     }

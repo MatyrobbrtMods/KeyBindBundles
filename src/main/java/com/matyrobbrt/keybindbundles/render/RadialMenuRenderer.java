@@ -158,7 +158,8 @@ public abstract class RadialMenuRenderer<T> {
 
     private static void drawTorus(GuiGraphics guiGraphics, float startAngle, float sizeAngle, float inner, float outer, float red, float green, float blue, float alpha) {
         RenderSystem.setShader(GameRenderer::getPositionColorShader);
-        var vertexBuffer = Tesselator.getInstance().begin(VertexFormat.Mode.TRIANGLE_STRIP, DefaultVertexFormat.POSITION_COLOR);
+        var vertexBuffer = Tesselator.getInstance().getBuilder();
+        vertexBuffer.begin(VertexFormat.Mode.TRIANGLE_STRIP, DefaultVertexFormat.POSITION_COLOR);
         var matrix4f = guiGraphics.pose().last().pose();
         float draws = DRAWS * (sizeAngle / 360F);
         for (int i = 0; i <= draws; i++) {
@@ -166,12 +167,12 @@ public abstract class RadialMenuRenderer<T> {
             float angle = Mth.DEG_TO_RAD * degrees;
             float cos = Mth.cos(angle);
             float sin = Mth.sin(angle);
-            vertexBuffer.addVertex(matrix4f, outer * cos, outer * sin, 0)
-                    .setColor(red, green, blue, alpha);
-            vertexBuffer.addVertex(matrix4f, inner * cos, inner * sin, 0)
-                    .setColor(red, green, blue, alpha);
+            vertexBuffer.vertex(matrix4f, outer * cos, outer * sin, 0)
+                    .color(red, green, blue, alpha).endVertex();
+            vertexBuffer.vertex(matrix4f, inner * cos, inner * sin, 0)
+                    .color(red, green, blue, alpha).endVertex();
         }
-        BufferUploader.drawWithShader(vertexBuffer.buildOrThrow());
+        BufferUploader.drawWithShader(vertexBuffer.end());
     }
 
     public static float wrapDegrees(float angle) {

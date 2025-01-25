@@ -10,7 +10,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
-import net.neoforged.fml.loading.FMLPaths;
+import net.minecraftforge.fml.loading.FMLPaths;
 import org.apache.commons.lang3.ArrayUtils;
 import org.slf4j.Logger;
 
@@ -36,7 +36,7 @@ public class KeyBindBundleManager {
         try (var is = Files.newBufferedReader(PATH)) {
             var element = GSON.fromJson(is, JsonArray.class);
             keybinds.addAll(KeyBindBundle.LIST_CODEC.decode(JsonOps.INSTANCE, element)
-                    .getOrThrow().getFirst());
+                    .getOrThrow(false, LOGGER::error).getFirst());
 
             for (int i = 0; i < keybinds.size(); i++) {
                 keyMappings.add(keybinds.get(i).createMapping());
@@ -44,7 +44,7 @@ public class KeyBindBundleManager {
 
             var options = Minecraft.getInstance().options;
             for (int i = 0; i < options.keyMappings.length; i++) {
-                if (options.keyMappings[i] == ModKeyBindBundles.OPEN_SCREEN_MAPPING) {
+                if (options.keyMappings[i] == ModKeyBindBundlesClient.OPEN_SCREEN_MAPPING) {
                     options.keyMappings = ArrayUtils.insert(i + 1, options.keyMappings, keyMappings.toArray(KeyMapping[]::new));
                     break;
                 }
@@ -57,7 +57,7 @@ public class KeyBindBundleManager {
     }
 
     private static KeyMapping getLastKeyMapping() {
-        return keyMappings.isEmpty() ? ModKeyBindBundles.OPEN_SCREEN_MAPPING : keyMappings.getLast();
+        return keyMappings.isEmpty() ? ModKeyBindBundlesClient.OPEN_SCREEN_MAPPING : keyMappings.get(keyMappings.size() - 1);
     }
 
     public static KeyMapping add(KeyBindBundle bind) {
@@ -99,7 +99,7 @@ public class KeyBindBundleManager {
         try {
             var out = KeyBindBundle.LIST_CODEC
                     .encodeStart(JsonOps.INSTANCE, keybinds)
-                    .getOrThrow();
+                    .getOrThrow(false, LOGGER::error);
             Files.writeString(PATH, GSON.toJson(out));
         } catch (IOException ex) {
             LOGGER.error("Error writing to file {}: ", PATH, ex);
@@ -186,12 +186,12 @@ public class KeyBindBundleManager {
         }
 
         private boolean opensRadial() {
-            return ModKeyBindBundles.OPEN_RADIAL_MENU_MAPPING.isDown();
+            return ModKeyBindBundlesClient.OPEN_RADIAL_MENU_MAPPING.isDown();
         }
 
         @Override
         public int compareTo(KeyMapping map) {
-            if (map == ModKeyBindBundles.OPEN_SCREEN_MAPPING || map == ModKeyBindBundles.OPEN_RADIAL_MENU_MAPPING) return 1;
+            if (map == ModKeyBindBundlesClient.OPEN_SCREEN_MAPPING || map == ModKeyBindBundlesClient.OPEN_RADIAL_MENU_MAPPING) return 1;
             return super.compareTo(map);
         }
     }

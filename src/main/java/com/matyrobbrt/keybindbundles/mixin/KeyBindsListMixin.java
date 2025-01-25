@@ -8,8 +8,8 @@ import com.matyrobbrt.keybindbundles.render.KeyBundleModificationScreen;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.ContainerObjectSelectionList;
-import net.minecraft.client.gui.screens.options.controls.KeyBindsList;
-import net.minecraft.client.gui.screens.options.controls.KeyBindsScreen;
+import net.minecraft.client.gui.screens.controls.KeyBindsList;
+import net.minecraft.client.gui.screens.controls.KeyBindsScreen;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Pseudo;
 import org.spongepowered.asm.mixin.injection.At;
@@ -17,10 +17,10 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Pseudo
-@Mixin(targets = {"net/minecraft/client/gui/screens/options/controls/KeyBindsList", "com/blamejared/controlling/client/NewKeyBindsList"})
+@Mixin(targets = {"net/minecraft/client/gui/screens/controls/KeyBindsList", "com/blamejared/controlling/client/NewKeyBindsList"})
 public abstract class KeyBindsListMixin extends ContainerObjectSelectionList<KeyBindsList.Entry> {
-    private KeyBindsListMixin(Minecraft minecraft, int width, int height, int y, int itemHeight) {
-        super(minecraft, width, height, y, itemHeight);
+    private KeyBindsListMixin(Minecraft minecraft, int width, int height, int y0, int y1, int itemHeight) {
+        super(minecraft, width, height, y0, y1, itemHeight);
     }
 
     @Inject(at = @At(value = "TAIL"), method = "<init>")

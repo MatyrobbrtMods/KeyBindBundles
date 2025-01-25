@@ -63,7 +63,7 @@ public class KeyBindBundle {
         public static final Codec<KeyEntry> CODEC = RecordCodecBuilder.create(in -> in.group(
                 Codec.STRING.fieldOf("key").forGetter(KeyEntry::key),
                 Codec.STRING.fieldOf("title").forGetter(KeyEntry::title),
-                ItemStack.OPTIONAL_CODEC.lenientOptionalFieldOf("icon", ItemStack.EMPTY).forGetter(KeyEntry::icon)
+                ItemStack.CODEC.optionalFieldOf("icon", ItemStack.EMPTY).forGetter(KeyEntry::icon)
         ).apply(in, KeyEntry::new));
     }
 }

@@ -3,20 +3,19 @@ package com.matyrobbrt.keybindbundles.render;
 import com.matyrobbrt.keybindbundles.KeyBindBundle;
 import com.matyrobbrt.keybindbundles.KeyBindBundleManager;
 import com.matyrobbrt.keybindbundles.KeyMappingUtil;
-import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.LayeredDraw;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.client.gui.overlay.ForgeGui;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.List;
 
-public class KeybindSelectionOverlay extends RadialMenuRenderer<KeyBindBundle.KeyEntry> implements LayeredDraw.Layer {
+public class KeybindSelectionOverlay extends RadialMenuRenderer<KeyBindBundle.KeyEntry> implements net.minecraftforge.client.gui.overlay.IGuiOverlay {
     public static final KeybindSelectionOverlay INSTANCE = new KeybindSelectionOverlay();
 
     @Nullable
@@ -47,7 +46,7 @@ public class KeybindSelectionOverlay extends RadialMenuRenderer<KeyBindBundle.Ke
     }
 
     @Override
-    public void render(GuiGraphics guiGraphics, DeltaTracker deltaTracker) {
+    public void render(ForgeGui gui, GuiGraphics guiGraphics, float partialTick, int screenWidth, int screenHeight) {
         if (displayedKeybind == null) return;
 
         super.render(guiGraphics, true);
@@ -58,6 +57,7 @@ public class KeybindSelectionOverlay extends RadialMenuRenderer<KeyBindBundle.Ke
             KeyMappingUtil.release(currentlyPressing);
             currentlyPressing = null;
         }
+        if (displayedKeybind == null) return; // By releasing the mouse we might have opened a screen and therefore released all keybinds too
 
         var window = Minecraft.getInstance().getWindow();
         float centerX = window.getGuiScaledWidth() / 2f;

@@ -1,20 +1,21 @@
 package com.matyrobbrt.keybindbundles.compat;
 
-import com.blamejared.controlling.api.entries.IKeyEntry;
 import com.blamejared.controlling.api.events.KeyEntryListenersEvent;
 import com.blamejared.controlling.client.CustomList;
 import com.blamejared.controlling.client.NewKeyBindsList;
 import net.minecraft.client.KeyMapping;
-import net.minecraft.client.gui.screens.options.controls.KeyBindsList;
+import net.minecraft.client.gui.screens.controls.KeyBindsList;
 import net.minecraft.network.chat.Component;
-import net.neoforged.neoforge.common.NeoForge;
+import net.minecraftforge.common.MinecraftForge;
 
+import java.lang.reflect.Constructor;
 import java.util.function.Predicate;
 
 public class ControllingCompatInstance implements ControllingCompat {
+    private final Constructor<NewKeyBindsList.KeyEntry> ctor;
 
     public ControllingCompatInstance() {
-        NeoForge.EVENT_BUS.addListener((final KeyEntryListenersEvent event) -> {
+        MinecraftForge.EVENT_BUS.addListener((final KeyEntryListenersEvent event) -> {
             if (event.getEntry() instanceof OverrideListenersEntry et) {
                 if (et.doOverrideListeners()) {
                     event.getListeners().clear();
@@ -22,6 +23,13 @@ public class ControllingCompatInstance implements ControllingCompat {
                 event.getListeners().addAll(et.getAdditionalListeners());
             }
         });
+
+        try {
+            ctor = NewKeyBindsList.KeyEntry.class.getDeclaredConstructor(NewKeyBindsList.class, KeyMapping.class, Component.class);
+            ctor.setAccessible(true);
+        } catch (Exception ex) {
+            throw new RuntimeException(ex);
+        }
     }
 
     @Override
@@ -33,13 +41,20 @@ public class ControllingCompatInstance implements ControllingCompat {
 
     @Override
     public boolean testKey(KeyBindsList.Entry entry, Predicate<KeyMapping> test) {
-        return entry instanceof IKeyEntry ke ? test.test(ke.getKey()) : (entry instanceof KeyBindsList.KeyEntry kk && test.test(kk.key));
+        if (entry instanceof NewKeyBindsList.KeyEntry ke) {
+            return test.test(ke.getKey());
+        }
+        return ControllingCompat.super.testKey(entry, test);
     }
 
     @Override
     public KeyBindsList.Entry createEntry(KeyBindsList list, KeyMapping mapping) {
         if (list instanceof NewKeyBindsList nl) {
-            return nl.new KeyEntry(mapping, Component.translatable(mapping.getName()));
+            try {
+                return ctor.newInstance(nl, mapping, Component.translatable(mapping.getName()));
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
         }
         return ControllingCompat.super.createEntry(list, mapping);
     }
