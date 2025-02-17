@@ -15,6 +15,8 @@ import net.minecraftforge.client.event.ScreenEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.ModLoadingContext;
+import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import org.apache.commons.lang3.ArrayUtils;
 import org.lwjgl.glfw.GLFW;
@@ -89,5 +91,7 @@ public class ModKeyBindBundlesClient {
         MinecraftForge.EVENT_BUS.addListener((final ScreenEvent.Opening event) -> KeyMappingUtil.restoreAll());
 
         MinecraftForge.EVENT_BUS.addListener(SearchTreeManager::onPlayerJoin);
+
+        ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, KBClientConfig.SPEC, ModKeyBindBundles.MOD_ID + "-client.toml");
     }
 }
