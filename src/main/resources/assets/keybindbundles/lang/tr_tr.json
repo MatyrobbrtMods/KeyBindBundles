@@ -1,0 +1,31 @@
+{
+  "category.keybindbundles": "KeyBind Bundles",
+  "key.keybindbundles.open_screen": "Tuş Atamaları Ekranını aç",
+  "key.keybindbundles.open_radial_menu": "Paket Dairesel Menüsünü Aç",
+
+  "key.keybindbundles.bundle": "§6%s§r Tuş Paketi",
+
+  "title.keybindbundles.editing_key": "%s Tuşu Düzenleniyor",
+  "title.keybindbundles.editing_keybundle": "§6%s§r Tuş Paketi Düzenleniyor",
+  "title.keybindbundles.adding_bundle": "Yeni tuş paketi oluşturuluyor",
+  "title.keybindbundles.confirm_deletion": "Silmeyi onayla",
+
+  "box.keybindbundles.bundle_name": "Tuş paketi ismini gir",
+  "box.keybindbundles.key_icon": "Tuş Eşya İkonu Kimliği",
+  "box.keybindbundles.key_icon_id": "Eşya ikonu kimliği",
+  "box.keybindbundles.key_title": "Tuş Başlığı",
+
+  "message.keybindbundles.confirm_deletion": "Bu paketi silmek istediğinden emin misin?",
+
+  "button.keybindbundles.add_bundle": "Tuş Paketi Ekle",
+  "button.keybindbundles.select": "Şeç",
+  "button.keybindbundles.selected": "Şeçili",
+  "button.keybindbundles.edit": "Düzenle",
+  "button.keybindbundles.delete": "Sil",
+
+  "tooltip.keybindbundles.delete_bundle": "Tuş paketini sil",
+  "tooltip.keybindbundles.bundle.edit_entry": "Girdiyi düzenlemek için Sol Tıkla",
+  "tooltip.keybindbundles.bundle.delete_entry": "Girdiyi silmek için Shift Sol Tıkla",
+  "tooltip.keybindbundles.bundle.move_clockwise": "Girdiyi saat yönünde hareket ettirmek için Sağ Tıkla",
+  "tooltip.keybindbundles.bundle.move_counterclockwise": "Girdiyi saat yönünün tersine hareket ettirmek için Shift Sağ Tıkla"
+}
