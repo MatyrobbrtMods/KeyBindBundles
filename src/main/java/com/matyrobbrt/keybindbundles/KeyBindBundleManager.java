@@ -153,8 +153,10 @@ public class KeyBindBundleManager {
                 }
             }
 
-            KeybindSelectionOverlay.INSTANCE.open(this);
-            Minecraft.getInstance().mouseHandler.releaseMouse();
+            if (!bind.getEntries().isEmpty()) {
+                KeybindSelectionOverlay.INSTANCE.open(this);
+                Minecraft.getInstance().mouseHandler.releaseMouse();
+            }
         }
 
         public void setAndPress(KeyMapping mapping) {
