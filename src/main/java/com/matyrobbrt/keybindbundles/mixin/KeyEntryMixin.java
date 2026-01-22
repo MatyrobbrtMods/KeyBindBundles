@@ -29,6 +29,9 @@ public class KeyEntryMixin extends BaseKeyEntryMixin {
     @Final
     private KeyBindsList this$0;
 
+    @Shadow
+    @Final
+    private Component name;
 
     @Inject(at = @At("TAIL"), method = "<init>")
     private void handleCustom(KeyBindsList owner, KeyMapping key, Component name, CallbackInfo ci) {
@@ -50,7 +53,7 @@ public class KeyEntryMixin extends BaseKeyEntryMixin {
             CallbackInfo ci
     ) {
         if (selectButton != null) {
-            guiGraphics.drawString(Minecraft.getInstance().font, name, left, top + height / 2 - 9 / 2, -1);
+            guiGraphics.drawString(Minecraft.getInstance().font, this.name, left, top + height / 2 - 9 / 2, -1);
             selectButton.setPosition(((AbstractSelectionListAccess) this$0).kbb$getScrollbarPosition() - selectButton.getWidth() - 10, top - 2);
             selectButton.render(guiGraphics, mouseX, mouseY, partialTick);
             ci.cancel();

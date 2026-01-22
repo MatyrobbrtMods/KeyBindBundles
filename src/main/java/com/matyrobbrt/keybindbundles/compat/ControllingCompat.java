@@ -19,6 +19,6 @@ public interface ControllingCompat {
     }
 
     default KeyBindsList.Entry createEntry(KeyBindsList list, KeyMapping mapping) {
-        return list.new KeyEntry(mapping, Component.translatable(mapping.getName()));
+        return list.new KeyEntry(mapping, mapping.getDisplayName());
     }
 }

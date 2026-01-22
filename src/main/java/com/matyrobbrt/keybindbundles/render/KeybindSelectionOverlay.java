@@ -136,23 +136,24 @@ public class KeybindSelectionOverlay extends RadialMenuRenderer<KeyBindBundle.Ke
 
     public void close() {
         var kb = this.displayedKeybind;
-        if (kb != null && KBClientConfig.TRIGGER_KEYMAPPING_ON_RELEASE.getAsBoolean()) {
-            var idx = getElementUnderMouse(false);
-            if (idx >= 0) {
-                var key = KeyMappingUtil.getByName(displayedKeybind.getEntries().get(idx).key());
-                if (key != null) {
-                    KeyMappingUtil.press(key);
-                    KeyMappingUtil.click(key);
-                    // Delay release until next tick
-                    Minecraft.getInstance().execute(() -> KeyMappingUtil.release(key));
-                }
+        int underMouse = getElementUnderMouse(false);
+
+        // Release keys before triggering them, to avoid scenarios in which triggering them would result
+        // in a screen being set, which would infinitely release and trigger them again
+        this.displayedKeybind = null;
+        this.displayedMapping = null;
+        clearState();
+
+        if (kb != null && KBClientConfig.TRIGGER_KEYMAPPING_ON_RELEASE.getAsBoolean() && underMouse >= 0) {
+            var key = KeyMappingUtil.getByName(kb.getEntries().get(underMouse).key());
+            if (key != null) {
+                KeyMappingUtil.press(key);
+                KeyMappingUtil.click(key);
+                // Delay release until next tick
+                Minecraft.getInstance().execute(() -> KeyMappingUtil.release(key));
             }
         }
 
-        this.displayedKeybind = null;
-        this.displayedMapping = null;
-
-        clearState();
         KeyMappingUtil.restoreAll();
     }
 }
