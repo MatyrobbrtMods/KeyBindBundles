@@ -85,7 +85,8 @@ public class ModKeyBindBundles {
         });
 
         NeoForge.EVENT_BUS.addListener((final InputEvent.MouseButton.Pre event) -> {
-            if (KeybindSelectionOverlay.INSTANCE.getDisplayedKeybind() != null && Minecraft.getInstance().screen == null) {
+            // Only handle right and left clicks, and allow minecraft to process buttons like Button 4 normally (see https://github.com/MatyrobbrtMods/KeyBindBundles/issues/28)
+            if (KeybindSelectionOverlay.INSTANCE.getDisplayedKeybind() != null && Minecraft.getInstance().screen == null && event.getButton() <= GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
                 var mouse = Minecraft.getInstance().mouseHandler;
                 double mouseX = mouse.xpos() * (double)Minecraft.getInstance().getWindow().getGuiScaledWidth() / (double)Minecraft.getInstance().getWindow().getScreenWidth();
                 double mouseY = mouse.ypos() * (double)Minecraft.getInstance().getWindow().getGuiScaledHeight() / (double)Minecraft.getInstance().getWindow().getScreenHeight();
