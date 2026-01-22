@@ -113,6 +113,8 @@ public class KeyBindBundleManager {
     public static class RadialKeyMapping extends PriorityKeyMapping {
         public final KeyBindBundle bind;
         private final Component name;
+        private long pressStartTime = 0L;
+        private boolean radialOpened = false;
         public RadialKeyMapping(String name, int keyCode, String category, KeyBindBundle bind) {
             super(name, keyCode, category);
             this.bind = bind;
@@ -128,34 +130,35 @@ public class KeyBindBundleManager {
 
         @Override
         public void setDown(boolean value) {
-            if (this.isDown()) {
-                if (value) {
-                    click();
-                } else {
-                    onRelease();
-                    super.setDown(false);
-                }
-            } else if (!this.isDown() && value) {
-                onClick();
+            boolean wasDown = this.isDown();
+            long heldTime = System.currentTimeMillis() - pressStartTime;
+            double delay = KBClientConfig.OPEN_RADIAL_DELAY.get() * 1000;
+            var bookmarked = bind.getBookmarked();
+
+            if (value && !wasDown) {
+                pressStartTime = System.currentTimeMillis();
+                radialOpened = false;
                 super.setDown(true);
             }
-        }
 
-        private void onClick() {
-            if (!opensRadial()) {
-                var entry = bind.getBookmarked();
-                if (entry != null) {
-                    var key = KeyMappingUtil.getByName(entry.key());
+            else if (!value && wasDown) {
+                if (bookmarked != null && heldTime < delay) {
+                    var key = KeyMappingUtil.getByName(bookmarked.key());
                     if (key != null) {
                         setAndPress(key);
-                        return;
                     }
                 }
+
+                onRelease();
+                super.setDown(false);
             }
 
-            if (!bind.getEntries().isEmpty()) {
-                KeybindSelectionOverlay.INSTANCE.open(this);
-                Minecraft.getInstance().mouseHandler.releaseMouse();
+            if (value && !radialOpened) {
+                if ((bookmarked == null || (wasDown && heldTime >= delay)) && !bind.getEntries().isEmpty()) {
+                    KeybindSelectionOverlay.INSTANCE.open(this);
+                    Minecraft.getInstance().mouseHandler.releaseMouse();
+                    radialOpened = true;
+                }
             }
         }
 
@@ -177,18 +180,16 @@ public class KeyBindBundleManager {
                 currentlyPressing = null;
             }
 
-            if (KeybindSelectionOverlay.INSTANCE.getDisplayedMapping() == this) {
+            if (radialOpened && KeybindSelectionOverlay.INSTANCE.getDisplayedMapping() == this) {
                 KeybindSelectionOverlay.INSTANCE.close();
 
                 var mouse = Minecraft.getInstance().mouseHandler;
                 if (!mouse.isMouseGrabbed() && Minecraft.getInstance().screen == null) {
                     mouse.grabMouse();
                 }
-            }
-        }
 
-        private boolean opensRadial() {
-            return ModKeyBindBundles.OPEN_RADIAL_MENU_MAPPING.isDown();
+                radialOpened = false;
+            }
         }
 
         @Override
