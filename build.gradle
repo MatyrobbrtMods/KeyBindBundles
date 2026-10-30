@@ -24,7 +24,7 @@ repositories {
 }
 
 base {
-    archivesName = mod_id
+    archivesName = "${mod_id}-${minecraft_version}"
 }
 
 // Mojang ships Java 21 to end users starting in 1.20.5, so mods should target Java 21.
@@ -124,8 +124,8 @@ repositories {
 }
 
 mixin {
-    add sourceSets.main, 'keybindbundles.mixins.refmap.json'
-    config 'keybindbundles.mixins.json'
+    add sourceSets.main, 'kbbrebound.mixins.refmap.json'
+    config 'kbbrebound.mixins.json'
 }
 
 dependencies {
@@ -166,8 +166,9 @@ dependencies {
 }
 
 jar {
+    from("LICENSE") // MIT wants the notice shipped with the jar
     manifest.attributes([
-            "MixinConfigs": 'keybindbundles.mixins.json'
+            "MixinConfigs": 'kbbrebound.mixins.json'
     ])
 }
 
