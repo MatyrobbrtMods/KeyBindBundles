@@ -12,6 +12,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.neoforged.fml.loading.FMLPaths;
 import org.apache.commons.lang3.ArrayUtils;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 
 import java.io.IOException;
@@ -104,6 +105,16 @@ public class KeyBindBundleManager {
         } catch (IOException ex) {
             LOGGER.error("Error writing to file {}: ", PATH, ex);
         }
+    }
+
+    // bundle name for a bundle keybind's name, for the lang lookup
+    @Nullable
+    public static String getBundleName(String mappingName) {
+        if (keyMappings == null) return null; // not loaded yet
+        for (var mapping : keyMappings) {
+            if (mapping.getName().equals(mappingName)) return mapping.bind.name;
+        }
+        return null;
     }
 
     public static List<RadialKeyMapping> getKeys() {
