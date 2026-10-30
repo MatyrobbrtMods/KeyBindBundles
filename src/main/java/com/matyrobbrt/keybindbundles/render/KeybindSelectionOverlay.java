@@ -57,6 +57,7 @@ public class KeybindSelectionOverlay extends RadialMenuRenderer<KeyBindBundle.Ke
             KeyMappingUtil.release(currentlyPressing);
             currentlyPressing = null;
         }
+        var displayedKeybind = this.displayedKeybind;
         if (displayedKeybind == null) return; // By releasing the mouse we might have opened a screen and therefore released all keybinds too
 
         var window = Minecraft.getInstance().getWindow();
