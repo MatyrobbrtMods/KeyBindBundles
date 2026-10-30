@@ -39,7 +39,7 @@ public abstract class RadialMenuRenderer<T> {
     private static final float[] TEAL = {0.1F, 0.65F, 0.65F};
     private static final float[] INDIGO = {0.25F, 0.2F, 0.7F};
     private static final float[] HOVERED = {1.0F, 0.55F, 0.1F};
-    private static final float[] BOOKMARKED = {0.9F, 0.9F, 0.9F};
+    private static final float[] BOOKMARKED = {0.85F, 0.1F, 0.15F};
 
     private static float[] segmentColor(int i, int count, int hovered, int bookmarked) {
         if (i == hovered) return HOVERED;
