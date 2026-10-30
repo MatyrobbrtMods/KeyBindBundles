@@ -1,5 +1,6 @@
 package com.matyrobbrt.keybindbundles.render;
 
+import com.matyrobbrt.keybindbundles.KBClientConfig;
 import com.matyrobbrt.keybindbundles.KeyBindBundle;
 import com.matyrobbrt.keybindbundles.KeyBindBundleManager;
 import com.matyrobbrt.keybindbundles.KeyMappingUtil;
@@ -56,6 +57,12 @@ public class KeybindSelectionOverlay extends RadialMenuRenderer<KeyBindBundle.Ke
         if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT && currentlyPressing != null && action == GLFW.GLFW_RELEASE) {
             KeyMappingUtil.release(currentlyPressing);
             currentlyPressing = null;
+
+            // picked something, we're done
+            if (KBClientConfig.TOGGLE_MENU.get()) {
+                closeAndGrabMouse();
+                return;
+            }
         }
         var displayedKeybind = this.displayedKeybind;
         if (displayedKeybind == null) return; // By releasing the mouse we might have opened a screen and therefore released all keybinds too
@@ -107,9 +114,19 @@ public class KeybindSelectionOverlay extends RadialMenuRenderer<KeyBindBundle.Ke
         this.displayedMapping = mapping;
     }
 
+    public void closeAndGrabMouse() {
+        close();
+
+        var mouse = Minecraft.getInstance().mouseHandler;
+        if (!mouse.isMouseGrabbed() && Minecraft.getInstance().screen == null) {
+            mouse.grabMouse();
+        }
+    }
+
     public void close() {
         this.displayedKeybind = null;
         this.displayedMapping = null;
+        this.currentlyPressing = null; // restoreAll below lets it go
 
         clearState();
         KeyMappingUtil.restoreAll();

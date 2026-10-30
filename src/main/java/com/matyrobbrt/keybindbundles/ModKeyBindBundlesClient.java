@@ -89,7 +89,13 @@ public class ModKeyBindBundlesClient {
             }
         });
 
-        MinecraftForge.EVENT_BUS.addListener((final ScreenEvent.Opening event) -> KeyMappingUtil.restoreAll());
+        MinecraftForge.EVENT_BUS.addListener((final ScreenEvent.Opening event) -> {
+            // esc or any other screen shuts the menu, or it'd get stuck open in toggle mode
+            if (KeybindSelectionOverlay.INSTANCE.getDisplayedKeybind() != null) {
+                KeybindSelectionOverlay.INSTANCE.close();
+            }
+            KeyMappingUtil.restoreAll();
+        });
 
         MinecraftForge.EVENT_BUS.addListener(SearchTreeManager::onPlayerJoin);
 
