@@ -78,6 +78,7 @@ legacyForge {
 
         // applies to all the run configs above
         configureEach {
+            gameDirectory = project.file('run-1.20.1') // own folder per version so worlds/configs don't mix
             // Recommended logging data for a userdev environment
             // The markers can be added/remove as needed separated by commas.
             // "SCAN": For mods scan.
@@ -161,6 +162,7 @@ dependencies {
     modRuntimeOnly("curse.maven:mekanism-268560:6018299")
     modRuntimeOnly("curse.maven:controlling-250398:4646682")
     modRuntimeOnly("curse.maven:searchables-858542:5284015")
+    modRuntimeOnly("curse.maven:building-gadgets-298187:6850495") // building gadgets 2 1.0.8, compat testing
 }
 
 jar {
