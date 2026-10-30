@@ -40,7 +40,7 @@ public class ModKeyBindBundlesClient {
     ) {
         @Override
         public void setDown(boolean value) {
-            if (isDown() && !value) {
+            if (isDown() && !value && Minecraft.getInstance().screen == null) {
                 super.setDown(false);
                 Minecraft.getInstance().setScreen(new KeyBindsScreen(new Screen(Component.empty()) {
                     @Override
