@@ -9,6 +9,7 @@
     "KeyMappingMixin",
     "BaseKeyEntryMixin",
     "InputConstantsMixin",
+    "KeyboardHandlerMixin",
 
     "compat.NewKeyEntryMixin",
 
