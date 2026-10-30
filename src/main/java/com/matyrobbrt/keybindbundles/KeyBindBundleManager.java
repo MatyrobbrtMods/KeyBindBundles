@@ -136,7 +136,12 @@ public class KeyBindBundleManager {
                     super.setDown(false);
                 }
             } else if (!this.isDown() && value) {
-                onClick();
+                // second press closes it in toggle mode, check before the bookmark path
+                if (KBClientConfig.TOGGLE_MENU.getAsBoolean() && KeybindSelectionOverlay.INSTANCE.getDisplayedMapping() == this) {
+                    KeybindSelectionOverlay.INSTANCE.closeAndGrabMouse(KBClientConfig.TRIGGER_KEYMAPPING_ON_RELEASE.getAsBoolean());
+                } else {
+                    onClick();
+                }
                 super.setDown(true);
             }
         }
@@ -177,13 +182,8 @@ public class KeyBindBundleManager {
                 currentlyPressing = null;
             }
 
-            if (KeybindSelectionOverlay.INSTANCE.getDisplayedMapping() == this) {
-                KeybindSelectionOverlay.INSTANCE.close();
-
-                var mouse = Minecraft.getInstance().mouseHandler;
-                if (!mouse.isMouseGrabbed() && Minecraft.getInstance().screen == null) {
-                    mouse.grabMouse();
-                }
+            if (!KBClientConfig.TOGGLE_MENU.getAsBoolean() && KeybindSelectionOverlay.INSTANCE.getDisplayedMapping() == this) {
+                KeybindSelectionOverlay.INSTANCE.closeAndGrabMouse(KBClientConfig.TRIGGER_KEYMAPPING_ON_RELEASE.getAsBoolean());
             }
         }
 

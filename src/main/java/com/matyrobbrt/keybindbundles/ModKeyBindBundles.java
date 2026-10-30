@@ -106,7 +106,13 @@ public class ModKeyBindBundles {
             }
         });
 
-        NeoForge.EVENT_BUS.addListener((final ScreenEvent.Opening event) -> KeyMappingUtil.restoreAll());
+        NeoForge.EVENT_BUS.addListener((final ScreenEvent.Opening event) -> {
+            // esc or any other screen shuts the menu, or it'd get stuck open in toggle mode
+            if (KeybindSelectionOverlay.INSTANCE.getDisplayedKeybind() != null) {
+                KeybindSelectionOverlay.INSTANCE.close(false);
+            }
+            KeyMappingUtil.restoreAll();
+        });
 
         NeoForge.EVENT_BUS.addListener(SearchTreeManager::onPlayerJoin);
 
