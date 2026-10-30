@@ -18,6 +18,7 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
+import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.neoforged.neoforge.client.event.InputEvent;
 import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
 import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
@@ -113,6 +114,9 @@ public class ModKeyBindBundles {
             }
             KeyMappingUtil.restoreAll();
         });
+
+        // let go of held stuff once the real key comes up
+        NeoForge.EVENT_BUS.addListener((final ClientTickEvent.Post event) -> KeyMappingUtil.tickHeld());
 
         NeoForge.EVENT_BUS.addListener(SearchTreeManager::onPlayerJoin);
 

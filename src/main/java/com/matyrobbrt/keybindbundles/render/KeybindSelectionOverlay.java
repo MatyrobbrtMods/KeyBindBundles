@@ -4,6 +4,7 @@ import com.matyrobbrt.keybindbundles.KBClientConfig;
 import com.matyrobbrt.keybindbundles.KeyBindBundle;
 import com.matyrobbrt.keybindbundles.KeyBindBundleManager;
 import com.matyrobbrt.keybindbundles.KeyMappingUtil;
+import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
@@ -138,6 +139,22 @@ public class KeybindSelectionOverlay extends RadialMenuRenderer<KeyBindBundle.Ke
     public void open(KeyBindBundleManager.RadialKeyMapping mapping) {
         this.displayedKeybind = mapping.bind;
         this.displayedMapping = mapping;
+    }
+
+    // space/enter picks the hovered one and keeps it held till that key comes up
+    public void activateHovered(InputConstants.Key physical) {
+        var kb = this.displayedKeybind;
+        if (kb == null) return;
+
+        int idx = getElementUnderMouse(false);
+        if (idx < 0 || idx >= kb.getEntries().size()) return;
+
+        var key = KeyMappingUtil.getByName(kb.getEntries().get(idx).key());
+        if (key == null) return;
+
+        // close first so restoreAll in there doesnt touch it
+        closeAndGrabMouse(false);
+        KeyMappingUtil.pressHeld(key, physical);
     }
 
     public void closeAndGrabMouse(boolean triggerHovered) {
