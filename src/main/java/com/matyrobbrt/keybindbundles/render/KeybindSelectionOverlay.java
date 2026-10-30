@@ -128,6 +128,8 @@ public class KeybindSelectionOverlay extends RadialMenuRenderer<KeyBindBundle.Ke
 
         // close first so restoreAll in there doesnt touch it
         closeAndGrabMouse();
+        // grabbing the mouse re-reads held keys so space turns jump on, undo that
+        KeyMapping.set(physical, false);
         KeyMappingUtil.pressHeld(key, physical);
     }
 
