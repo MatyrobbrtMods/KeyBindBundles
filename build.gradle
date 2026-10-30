@@ -22,6 +22,12 @@ repositories {
     }
 }
 
+repositories {
+    maven {
+        url 'https://cursemaven.com'
+    }
+}
+
 base {
     archivesName = mod_id
 }
@@ -77,6 +83,7 @@ neoForge {
 
         // applies to all the run configs above
         configureEach {
+            gameDirectory = project.file('run-1.21.1') // own folder per version so worlds/configs don't mix
             // Recommended logging data for a userdev environment
             // The markers can be added/remove as needed separated by commas.
             // "SCAN": For mods scan.
@@ -139,6 +146,7 @@ dependencies {
     // http://www.gradle.org/docs/current/userguide/dependency_management.html
 
     compileOnly "com.blamejared.controlling:Controlling-neoforge-1.21.1:19.0.3"
+    localRuntime "curse.maven:building-gadgets-298187:9310471" // building gadgets 2, compat testing
 }
 
 // This block of code expands all declared replace properties in the specified resource targets.
