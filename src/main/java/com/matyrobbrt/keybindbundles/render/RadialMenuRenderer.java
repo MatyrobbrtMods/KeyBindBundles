@@ -35,6 +35,20 @@ public abstract class RadialMenuRenderer<T> {
     public static final float INNER = 40, OUTER = 100;
     public static final float MIDDLE_DISTANCE = (INNER + OUTER) / 2F;
 
+    private static final float[] BLUE = {0.15F, 0.35F, 0.85F};
+    private static final float[] TEAL = {0.1F, 0.65F, 0.65F};
+    private static final float[] INDIGO = {0.25F, 0.2F, 0.7F};
+    private static final float[] HOVERED = {1.0F, 0.55F, 0.1F};
+    private static final float[] BOOKMARKED = {0.9F, 0.9F, 0.9F};
+
+    private static float[] segmentColor(int i, int count, int hovered, int bookmarked) {
+        if (i == hovered) return HOVERED;
+        if (i == bookmarked) return BOOKMARKED;
+        // odd count means last and first touch, don't let them both be blue
+        if (count > 1 && count % 2 == 1 && i == count - 1) return INDIGO;
+        return i % 2 == 0 ? BLUE : TEAL;
+    }
+
     public abstract List<T> getEntries();
 
     public abstract int getCurrentlySelected();
@@ -66,15 +80,18 @@ public abstract class RadialMenuRenderer<T> {
         guiGraphics.pose().pushMatrix();
         guiGraphics.pose().translate(centerX, centerY);
 
+        boolean tracking = trackMouse && !Minecraft.getInstance().mouseHandler.isMouseGrabbed();
+        int underMouse = tracking ? getElementUnderMouse(!trackOffCircleMouse()) : -1;
+
         var hot = getCurrentlySelected();
         for (int i = 0; i < entries.size(); i++) {
             float startAngle = -90F + 360F * (-0.5F + i) / count;
-            RadialMenuRenderer.drawTorus(guiGraphics, startAngle, angleSize, INNER, OUTER + 10f * (hoverGrows[i] / 10f), hot == i ? .7f : .3f, hot == i ? .4f : .3f, hot == i ? .45f : .3f, hot == i ? 0.7F : 0.6F);
+            float[] color = segmentColor(i, count, underMouse, hot);
+            boolean highlighted = i == underMouse || i == hot;
+            RadialMenuRenderer.drawTorus(guiGraphics, startAngle, angleSize, INNER, OUTER + 10f * (hoverGrows[i] / 10f), color[0], color[1], color[2], highlighted ? 0.7F : 0.6F);
         }
 
-        if (trackMouse && !Minecraft.getInstance().mouseHandler.isMouseGrabbed()) {
-            var underMouse = getElementUnderMouse(!trackOffCircleMouse());
-
+        if (tracking) {
             var current = System.currentTimeMillis();
             if (current >= (this.lastUpdate + 1000/40)) {
                 lastUpdate = current;
