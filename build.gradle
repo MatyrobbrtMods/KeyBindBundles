@@ -24,7 +24,7 @@ repositories {
 }
 
 base {
-    archivesName = "${mod_id}-${minecraft_version}"
+    archivesName = mod_id
 }
 
 // Mojang ships Java 21 to end users starting in 1.20.5, so mods should target Java 21.
@@ -122,6 +122,11 @@ repositories {
     }
 }
 
+mixin {
+    add sourceSets.main, 'keybindbundles.mixins.refmap.json'
+    config 'keybindbundles.mixins.json'
+}
+
 dependencies {
     // Example optional mod dependency with JEI
     // The JEI API is declared for compile time use, while the full JEI artifact is used at runtime
@@ -156,7 +161,12 @@ dependencies {
     modRuntimeOnly("curse.maven:mekanism-268560:6018299")
     modRuntimeOnly("curse.maven:controlling-250398:4646682")
     modRuntimeOnly("curse.maven:searchables-858542:5284015")
-    modRuntimeOnly("curse.maven:building-gadgets-298187:6850495") // building gadgets 2 1.0.8, compat testing
+}
+
+jar {
+    manifest.attributes([
+            "MixinConfigs": 'keybindbundles.mixins.json'
+    ])
 }
 
 // This block of code expands all declared replace properties in the specified resource targets.
