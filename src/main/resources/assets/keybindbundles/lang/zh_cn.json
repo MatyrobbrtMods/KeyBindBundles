@@ -1,0 +1,35 @@
+{
+  "category.keybindbundles": "快捷轮盘",
+  "key.keybindbundles.open_screen": "打开按键绑定菜单",
+  "key.keybindbundles.open_radial_menu": "打开快捷轮盘菜单",
+
+  "key.keybindbundles.bundle": "快捷轮盘 §6%s§r",
+
+  "title.keybindbundles.editing_key": "编辑栏位 %s",
+  "title.keybindbundles.editing_keybundle": "编辑快捷轮盘 §6%s§r",
+  "title.keybindbundles.adding_bundle": "创建新的快捷轮盘",
+  "title.keybindbundles.confirm_deletion": "确认删除",
+
+  "box.keybindbundles.bundle_name": "输入快捷轮盘名",
+  "box.keybindbundles.key_icon": "图标 ID",
+  "box.keybindbundles.key_icon_id": "图标 ID",
+  "box.keybindbundles.key_title": "标题",
+
+  "message.keybindbundles.confirm_deletion": "确认删除此快捷轮盘?",
+
+  "button.keybindbundles.add_bundle": "添加快捷轮盘",
+  "button.keybindbundles.select": "选择",
+  "button.keybindbundles.selected": "已选择",
+  "button.keybindbundles.edit": "编辑",
+  "button.keybindbundles.delete": "删除",
+
+  "tooltip.keybindbundles.delete_bundle": "删除快捷轮盘",
+  "tooltip.keybindbundles.bundle.edit_entry": "点击鼠标左键以编辑轮盘栏位",
+  "tooltip.keybindbundles.bundle.delete_entry": "按住shift点击鼠标左键以删除轮盘栏位",
+  "tooltip.keybindbundles.bundle.move_clockwise": "点击鼠标右键以顺时针移动栏位",
+  "tooltip.keybindbundles.bundle.move_counterclockwise": "按住shift点击鼠标右键以逆时针移动栏位",
+
+  "keybindbundles.configuration.ignoreInvalidKeyChecks": "忽略无效按键检查 #isKeyDown",
+  "keybindbundles.configuration.clipMouseToMenu": "将鼠标限制在轮盘菜单中",
+  "keybindbundles.configuration.triggerKeymappingOnRelease": "关闭轮盘时触发鼠标指向的栏位操作"
+}

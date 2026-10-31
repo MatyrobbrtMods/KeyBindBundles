@@ -13,6 +13,7 @@ import net.minecraftforge.client.event.RegisterGuiOverlaysEvent;
 import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
 import net.minecraftforge.client.event.ScreenEvent;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.ModLoadingContext;
@@ -40,7 +41,7 @@ public class ModKeyBindBundlesClient {
     ) {
         @Override
         public void setDown(boolean value) {
-            if (isDown() && !value) {
+            if (isDown() && !value && Minecraft.getInstance().screen == null) {
                 super.setDown(false);
                 Minecraft.getInstance().setScreen(new KeyBindsScreen(new Screen(Component.empty()) {
                     @Override
@@ -78,7 +79,8 @@ public class ModKeyBindBundlesClient {
         });
 
         MinecraftForge.EVENT_BUS.addListener((final InputEvent.MouseButton.Pre event) -> {
-            if (KeybindSelectionOverlay.INSTANCE.getDisplayedKeybind() != null && Minecraft.getInstance().screen == null) {
+            // Only handle right and left clicks, and allow minecraft to process buttons like Button 4 normally (see https://github.com/MatyrobbrtMods/KeyBindBundles/issues/28)
+            if (KeybindSelectionOverlay.INSTANCE.getDisplayedKeybind() != null && Minecraft.getInstance().screen == null && event.getButton() <= GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
                 var mouse = Minecraft.getInstance().mouseHandler;
                 double mouseX = mouse.xpos() * (double)Minecraft.getInstance().getWindow().getGuiScaledWidth() / (double)Minecraft.getInstance().getWindow().getScreenWidth();
                 double mouseY = mouse.ypos() * (double)Minecraft.getInstance().getWindow().getGuiScaledHeight() / (double)Minecraft.getInstance().getWindow().getScreenHeight();
@@ -88,7 +90,18 @@ public class ModKeyBindBundlesClient {
             }
         });
 
-        MinecraftForge.EVENT_BUS.addListener((final ScreenEvent.Opening event) -> KeyMappingUtil.restoreAll());
+        MinecraftForge.EVENT_BUS.addListener((final ScreenEvent.Opening event) -> {
+            // esc or any other screen shuts the menu, or it'd get stuck open in toggle mode
+            if (KeybindSelectionOverlay.INSTANCE.getDisplayedKeybind() != null) {
+                KeybindSelectionOverlay.INSTANCE.close();
+            }
+            KeyMappingUtil.restoreAll();
+        });
+
+        // let go of held stuff once the real key comes up
+        MinecraftForge.EVENT_BUS.addListener((final TickEvent.ClientTickEvent event) -> {
+            if (event.phase == TickEvent.Phase.END) KeyMappingUtil.tickHeld();
+        });
 
         MinecraftForge.EVENT_BUS.addListener(SearchTreeManager::onPlayerJoin);
 

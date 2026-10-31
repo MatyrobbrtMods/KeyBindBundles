@@ -27,5 +27,7 @@
   "tooltip.keybindbundles.bundle.edit_entry": "Left click to edit entry",
   "tooltip.keybindbundles.bundle.delete_entry": "Shift Left Click to delete entry",
   "tooltip.keybindbundles.bundle.move_clockwise": "Right click to move entry clockwise",
-  "tooltip.keybindbundles.bundle.move_counterclockwise": "Shift Right Click to move entry counterclockwise"
+  "tooltip.keybindbundles.bundle.move_counterclockwise": "Shift Right Click to move entry counterclockwise",
+
+  "keybindbundles.configuration.toggleMenu": "Toggle bundle menu instead of holding"
 }
