@@ -23,7 +23,7 @@ public class ClientLanguageMixin {
         if (name == null) return;
 
         var format = ((Language) (Object) this).getOrDefault("key.keybindbundles.bundle", "Key bundle %s");
-        // no gold here, plain text plays nicer with other mods
+        
         cir.setReturnValue(ChatFormatting.stripFormatting(String.format(format, name)));
     }
 

@@ -83,7 +83,7 @@ public class KeyMappingUtil {
 
     // press it and keep it pressed till the physical key comes up, even if a screen opens
     public static void pressHeld(KeyMapping mapping, InputConstants.Key physical) {
-        // already held from a quick double press, pressing again would lose the real key
+        // already held from a quick double press
         if (HELD_UNTIL_RELEASE.containsKey(mapping)) {
             click(mapping);
             HELD_UNTIL_RELEASE.put(mapping, physical);
