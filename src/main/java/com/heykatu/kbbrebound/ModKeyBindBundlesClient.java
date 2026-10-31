@@ -1,7 +1,7 @@
-package com.heykatu.kbbrebound;
+package com.matyrobbrt.keybindbundles;
 
-import com.heykatu.kbbrebound.render.KeybindSelectionOverlay;
-import com.heykatu.kbbrebound.util.SearchTreeManager;
+import com.matyrobbrt.keybindbundles.render.KeybindSelectionOverlay;
+import com.matyrobbrt.keybindbundles.util.SearchTreeManager;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
@@ -24,9 +24,9 @@ import org.lwjgl.glfw.GLFW;
 
 public class ModKeyBindBundlesClient {
     public static final KeyMapping OPEN_RADIAL_MENU_MAPPING = new PriorityKeyMapping(
-            "key.kbbrebound.open_radial_menu",
+            "key.keybindbundles.open_radial_menu",
             GLFW.GLFW_KEY_LEFT_ALT,
-            "category.kbbrebound"
+            "category.keybindbundles"
     ) {
         @Override
         public int compareTo(KeyMapping map) {
@@ -35,9 +35,9 @@ public class ModKeyBindBundlesClient {
     };
 
     public static final KeyMapping OPEN_SCREEN_MAPPING = new PriorityKeyMapping(
-            "key.kbbrebound.open_screen",
+            "key.keybindbundles.open_screen",
             GLFW.GLFW_KEY_UNKNOWN,
-            "category.kbbrebound"
+            "category.keybindbundles"
     ) {
         @Override
         public void setDown(boolean value) {

@@ -1,4 +1,4 @@
-package com.heykatu.kbbrebound;
+package com.matyrobbrt.keybindbundles;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -52,9 +52,9 @@ public class KeyBindBundle {
 
     public KeyBindBundleManager.RadialKeyMapping createMapping() {
         return new KeyBindBundleManager.RadialKeyMapping(
-                "key.kbbrebound.bundle_" + id.toString(),
+                "key.keybindbundles.bundle_" + id.toString(),
                 GLFW.GLFW_KEY_UNKNOWN,
-                "category.kbbrebound",
+                "category.keybindbundles",
                 this
         );
     }

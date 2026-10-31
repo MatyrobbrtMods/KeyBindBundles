@@ -1,4 +1,4 @@
-package com.heykatu.kbbrebound;
+package com.matyrobbrt.keybindbundles;
 
 import net.minecraftforge.common.ForgeConfigSpec;
 

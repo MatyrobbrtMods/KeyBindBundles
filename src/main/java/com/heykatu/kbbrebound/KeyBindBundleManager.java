@@ -1,9 +1,9 @@
-package com.heykatu.kbbrebound;
+package com.matyrobbrt.keybindbundles;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
-import com.heykatu.kbbrebound.render.KeybindSelectionOverlay;
+import com.matyrobbrt.keybindbundles.render.KeybindSelectionOverlay;
 import com.mojang.logging.LogUtils;
 import com.mojang.serialization.JsonOps;
 import net.minecraft.ChatFormatting;
@@ -127,7 +127,7 @@ public class KeyBindBundleManager {
         public RadialKeyMapping(String name, int keyCode, String category, KeyBindBundle bind) {
             super(name, keyCode, category);
             this.bind = bind;
-            this.name = Component.translatable("key.kbbrebound.bundle", Component.literal(bind.name).withStyle(ChatFormatting.GOLD));
+            this.name = Component.translatable("key.keybindbundles.bundle", Component.literal(bind.name).withStyle(ChatFormatting.GOLD));
         }
 
         @Override
