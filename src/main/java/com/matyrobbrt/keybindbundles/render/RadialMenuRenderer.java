@@ -1,5 +1,6 @@
 package com.matyrobbrt.keybindbundles.render;
 
+import com.matyrobbrt.keybindbundles.KBClientConfig;
 import com.matyrobbrt.keybindbundles.ModKeyBindBundles;
 import com.mojang.blaze3d.pipeline.RenderPipeline;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
@@ -19,7 +20,6 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.joml.Matrix3x2f;
 import org.jspecify.annotations.Nullable;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.IntStream;
 
@@ -105,36 +105,35 @@ public abstract class RadialMenuRenderer<T> {
             }
         }
 
-        record PositionedText(float x, float y, Component text) {}
-        List<PositionedText> textToDraw = new ArrayList<>(entries.size());
+        float fontScale = (float)KBClientConfig.FONT_SIZE.getAsDouble();
+        var font = Minecraft.getInstance().font;
 
-        float position = 0;
-        for (var key : entries) {
-            float degrees = 270 + 360 * (position++ / count);
+        for (int i = 0; i < entries.size(); i++) {
+            var key = entries.get(i);
+            float degrees = 270 + 360 * ((float)i / count);
             float angle = Mth.DEG_TO_RAD * degrees;
             float x = Mth.cos(angle) * RadialMenuRenderer.MIDDLE_DISTANCE;
             float y = Mth.sin(angle) * RadialMenuRenderer.MIDDLE_DISTANCE;
 
             var icon = getIcon(key);
+            var text = getTitle(key);
+            var width = getTextWidth(x, y + (icon.isEmpty() ? -4 : 0) + 8 * fontScale, degrees, angleSize, fontScale);
+
+            var lines = font.split(text, width);
+            int firstLineY = (icon.isEmpty() ? 0 : 8) - (lines.size() - 1) * font.lineHeight / 2;
+
             if (!icon.isEmpty()) {
-                textToDraw.add(new PositionedText(x, y, getTitle(key)));
-                guiGraphics.item(icon, Math.round(x - 8), Math.round(y - 8 - 2 - 9));
-            } else {
-                textToDraw.add(new PositionedText(x, y - 4, getTitle(key)));
+                guiGraphics.item(icon, Math.round(x - 8), Math.round(y + firstLineY - 4 - 16));
             }
-        }
 
-        if (!textToDraw.isEmpty()) {
-            var font = Minecraft.getInstance().font;
-
-            for (PositionedText toDraw : textToDraw) {
-                guiGraphics.pose().pushMatrix();
-                guiGraphics.pose().translate(toDraw.x, toDraw.y);
-                guiGraphics.pose().scale(0.6F, 0.6F);
-                Component text = toDraw.text;
-                guiGraphics.text(font, text, -font.width(text) / 2, 8, 0xCCFFFFFF, true);
-                guiGraphics.pose().popMatrix();
+            guiGraphics.pose().pushMatrix();
+            guiGraphics.pose().translate(x, y);
+            guiGraphics.pose().scale(fontScale, fontScale);
+            for (int line = 0; line < lines.size(); line++) {
+                var lineText = lines.get(line);
+                guiGraphics.text(font, lineText, -font.width(lineText) / 2, firstLineY + line * font.lineHeight, 0xCCFFFFFF, true);
             }
+            guiGraphics.pose().popMatrix();
         }
 
         guiGraphics.pose().popMatrix();
@@ -225,5 +224,30 @@ public abstract class RadialMenuRenderer<T> {
             angle += 360;
         }
         return angle;
+    }
+
+    private static int getTextWidth(float x, float y, float centerDegrees, float angleSize, float fontScale) {
+        float halfAngle = angleSize / 2;
+        float left = horizontalDistanceToSliceEdge(x, y, centerDegrees, halfAngle, -1);
+        float right = horizontalDistanceToSliceEdge(x, y, centerDegrees, halfAngle, 1);
+        return Math.max(1, Mth.floor((left + right - 8) / fontScale));
+    }
+    private static float horizontalDistanceToSliceEdge(float x, float y, float centerDegrees, float halfAngle, int direction) {
+        float low = 0;
+        float high = OUTER + MIDDLE_DISTANCE;
+        for (int i = 0; i < 16; i++) {
+            float distance = (low + high) / 2;
+            float candidateX = x + direction * distance;
+            float candidateAngle = (float) (Mth.RAD_TO_DEG * Mth.atan2(y, candidateX));
+            float angleDifference = wrapDegrees(candidateAngle - centerDegrees + 180) - 180;
+            boolean inside = Mth.sqrt(candidateX * candidateX + y * y) <= OUTER
+                    && Math.abs(angleDifference) <= halfAngle;
+            if (inside) {
+                low = distance;
+            } else {
+                high = distance;
+            }
+        }
+        return low;
     }
 }

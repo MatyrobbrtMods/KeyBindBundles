@@ -8,6 +8,7 @@ public class KBClientConfig {
     public static final ModConfigSpec.BooleanValue TRIGGER_KEYMAPPING_ON_RELEASE;
     public static final ModConfigSpec.BooleanValue IGNORE_INVALID_KEY_CHECKS;
     public static final ModConfigSpec.BooleanValue TOGGLE_MENU;
+    public static final ModConfigSpec.DoubleValue FONT_SIZE;
     static {
         var builder = new ModConfigSpec.Builder();
         TOGGLE_MENU = builder
@@ -23,6 +24,9 @@ public class KBClientConfig {
                 .comment("ONLY USE THIS IF YOU KNOW WHAT YOU'RE DOING")
                 .comment("Ignore invalid key checks in InputConstants#isKeyDown")
                 .define("ignoreInvalidKeyChecks", false);
+        FONT_SIZE = builder
+                .comment("The size of the font in the radial menu.")
+                .defineInRange("fontSize", 0.7d, 0.1d, 2d);
         SPEC = builder.build();
     }
 }
