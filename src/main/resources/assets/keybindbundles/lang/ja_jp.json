@@ -1,0 +1,35 @@
+{
+  "category.keybindbundles": "KeyBind Bundles",
+  "key.keybindbundles.open_screen": "キー割り当て画面を開く",
+  "key.keybindbundles.open_radial_menu": "キーバンドルのラジアルメニューを開く",
+
+  "key.keybindbundles.bundle": "キーバンドル §6%s§r",
+
+  "title.keybindbundles.editing_key": "キー %s を編集中",
+  "title.keybindbundles.editing_keybundle": "キーバンドル §6%s§r を編集中",
+  "title.keybindbundles.adding_bundle": "新しいキーバンドルを作成",
+  "title.keybindbundles.confirm_deletion": "削除の確認",
+
+  "box.keybindbundles.bundle_name": "キーバンドルの名前を入力",
+  "box.keybindbundles.key_icon": "アイコンのアイテムID",
+  "box.keybindbundles.key_icon_id": "アイコンのアイテムID",
+  "box.keybindbundles.key_title": "キーの名前",
+
+  "message.keybindbundles.confirm_deletion": "このバンドルを削除してもよろしいですか？",
+
+  "button.keybindbundles.add_bundle": "キーバンドルを追加",
+  "button.keybindbundles.select": "選択",
+  "button.keybindbundles.selected": "選択済み",
+  "button.keybindbundles.edit": "編集",
+  "button.keybindbundles.delete": "削除",
+
+  "tooltip.keybindbundles.delete_bundle": "キーバンドルを削除",
+  "tooltip.keybindbundles.bundle.edit_entry": "左クリックでエントリを編集",
+  "tooltip.keybindbundles.bundle.delete_entry": "Shift+左クリックでエントリを削除",
+  "tooltip.keybindbundles.bundle.move_clockwise": "右クリックでエントリを時計回りに移動",
+  "tooltip.keybindbundles.bundle.move_counterclockwise": "Shift+右クリックでエントリを反時計回りに移動",
+
+  "keybindbundles.configuration.ignoreInvalidKeyChecks": "#isKeyDownにおける無効なキーチェックを無視する",
+  "keybindbundles.configuration.clipMouseToMenu": "マウスカーソルをラジアルメニュー内に制限する",
+  "keybindbundles.configuration.triggerKeymappingOnRelease": "ラジアルメニュー解除時に選択中のキーを実行する"
+}
