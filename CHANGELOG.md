@@ -1,0 +1,4 @@
+- Add a config option for toggle mode (off by default) - this should when playing with controllers (katubug)
+- Improve readability of the radial menu by adding colours (katubug)
+- Add brazilian portugese translations (PrincessStellar)
+- Add japanese translations (Nia1111)
