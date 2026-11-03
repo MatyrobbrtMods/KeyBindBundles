@@ -12,7 +12,7 @@ public class KBClientConfig {
         var builder = new ModConfigSpec.Builder();
         TOGGLE_MENU = builder
                 .comment("If true, pressing a bundle key opens its menu until you press it again, pick an entry or open a screen. If false, the menu is only open while the key is held")
-                .define("toggleMenu", true);
+                .define("toggleMenu", false);
         CLIP_MOUSE_TO_MENU = builder
                 .comment("Set to true to clip the mouse within the bounds of the radial menu of bundles")
                 .define("clipMouseToMenu", false);
