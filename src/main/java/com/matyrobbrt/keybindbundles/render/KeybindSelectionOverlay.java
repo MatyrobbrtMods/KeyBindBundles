@@ -4,6 +4,7 @@ import com.matyrobbrt.keybindbundles.KBClientConfig;
 import com.matyrobbrt.keybindbundles.KeyBindBundle;
 import com.matyrobbrt.keybindbundles.KeyBindBundleManager;
 import com.matyrobbrt.keybindbundles.KeyMappingUtil;
+import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
@@ -85,6 +86,12 @@ public class KeybindSelectionOverlay extends RadialMenuRenderer<KeyBindBundle.Ke
         if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT && currentlyPressing != null && action == GLFW.GLFW_RELEASE) {
             KeyMappingUtil.release(currentlyPressing);
             currentlyPressing = null;
+
+            // picked something, we're done
+            if (KBClientConfig.TOGGLE_MENU.getAsBoolean()) {
+                closeAndGrabMouse(false);
+                return;
+            }
         }
 
         var window = Minecraft.getInstance().getWindow();
@@ -134,7 +141,34 @@ public class KeybindSelectionOverlay extends RadialMenuRenderer<KeyBindBundle.Ke
         this.displayedMapping = mapping;
     }
 
-    public void close() {
+    // space/enter picks the hovered one and keeps it held till that key comes up
+    public void activateHovered(InputConstants.Key physical) {
+        var kb = this.displayedKeybind;
+        if (kb == null) return;
+
+        int idx = getElementUnderMouse(false);
+        if (idx < 0 || idx >= kb.getEntries().size()) return;
+
+        var key = KeyMappingUtil.getByName(kb.getEntries().get(idx).key());
+        if (key == null) return;
+
+        // close first so restoreAll in there doesnt touch it
+        closeAndGrabMouse(false);
+        // grabbing the mouse re-reads held keys so space turns jump on, undo that
+        KeyMapping.set(physical, false);
+        KeyMappingUtil.pressHeld(key, physical);
+    }
+
+    public void closeAndGrabMouse(boolean triggerHovered) {
+        close(triggerHovered);
+
+        var mouse = Minecraft.getInstance().mouseHandler;
+        if (!mouse.isMouseGrabbed() && Minecraft.getInstance().screen == null) {
+            mouse.grabMouse();
+        }
+    }
+
+    public void close(boolean triggerHovered) {
         var kb = this.displayedKeybind;
         int underMouse = getElementUnderMouse(false);
 
@@ -142,9 +176,10 @@ public class KeybindSelectionOverlay extends RadialMenuRenderer<KeyBindBundle.Ke
         // in a screen being set, which would infinitely release and trigger them again
         this.displayedKeybind = null;
         this.displayedMapping = null;
+        this.currentlyPressing = null; // restoreAll below lets it go
         clearState();
 
-        if (kb != null && KBClientConfig.TRIGGER_KEYMAPPING_ON_RELEASE.getAsBoolean() && underMouse >= 0) {
+        if (kb != null && triggerHovered && underMouse >= 0) {
             var key = KeyMappingUtil.getByName(kb.getEntries().get(underMouse).key());
             if (key != null) {
                 KeyMappingUtil.press(key);
