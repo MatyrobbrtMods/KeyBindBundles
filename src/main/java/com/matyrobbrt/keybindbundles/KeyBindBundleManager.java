@@ -13,6 +13,7 @@ import net.minecraft.client.Options;
 import net.minecraft.network.chat.Component;
 import net.neoforged.fml.loading.FMLPaths;
 import org.apache.commons.lang3.ArrayUtils;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 
 import java.io.IOException;
@@ -106,6 +107,16 @@ public class KeyBindBundleManager {
         }
     }
 
+    // bundle name for a bundle keybind's name, for the lang lookup
+    @Nullable
+    public static String getBundleName(String mappingName) {
+        if (keyMappings == null) return null; // not loaded yet
+        for (var mapping : keyMappings) {
+            if (mapping.getName().equals(mappingName)) return mapping.bind.name;
+        }
+        return null;
+    }
+
     public static List<RadialKeyMapping> getKeys() {
         return keyMappings;
     }
@@ -136,7 +147,12 @@ public class KeyBindBundleManager {
                     super.setDown(false);
                 }
             } else if (!this.isDown() && value) {
-                onClick();
+                // second press closes it in toggle mode, check before the bookmark path
+                if (KBClientConfig.TOGGLE_MENU.getAsBoolean() && KeybindSelectionOverlay.INSTANCE.getDisplayedMapping() == this) {
+                    KeybindSelectionOverlay.INSTANCE.closeAndGrabMouse(KBClientConfig.TRIGGER_KEYMAPPING_ON_RELEASE.getAsBoolean());
+                } else {
+                    onClick();
+                }
                 super.setDown(true);
             }
         }
@@ -147,7 +163,9 @@ public class KeyBindBundleManager {
                 if (entry != null) {
                     var key = KeyMappingUtil.getByName(entry.key());
                     if (key != null) {
-                        setAndPress(key);
+                        // stays held till the bundle key itself comes up
+                        currentlyPressing = key;
+                        KeyMappingUtil.pressHeld(key, getKey());
                         return;
                     }
                 }
@@ -159,12 +177,6 @@ public class KeyBindBundleManager {
             }
         }
 
-        public void setAndPress(KeyMapping mapping) {
-            currentlyPressing = mapping;
-            KeyMappingUtil.press(mapping);
-            click();
-        }
-
         private void click() {
             if (currentlyPressing != null) {
                 KeyMappingUtil.click(currentlyPressing);
@@ -172,18 +184,11 @@ public class KeyBindBundleManager {
         }
 
         private void onRelease() {
-            if (currentlyPressing != null) {
-                KeyMappingUtil.release(currentlyPressing);
-                currentlyPressing = null;
-            }
+            // tickHeld does the actual release, this also fires when a screen opens
+            currentlyPressing = null;
 
-            if (KeybindSelectionOverlay.INSTANCE.getDisplayedMapping() == this) {
-                KeybindSelectionOverlay.INSTANCE.close();
-
-                var mouse = Minecraft.getInstance().mouseHandler;
-                if (!mouse.isMouseGrabbed() && Minecraft.getInstance().screen == null) {
-                    mouse.grabMouse();
-                }
+            if (!KBClientConfig.TOGGLE_MENU.getAsBoolean() && KeybindSelectionOverlay.INSTANCE.getDisplayedMapping() == this) {
+                KeybindSelectionOverlay.INSTANCE.closeAndGrabMouse(KBClientConfig.TRIGGER_KEYMAPPING_ON_RELEASE.getAsBoolean());
             }
         }
 
